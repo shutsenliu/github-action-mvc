@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Joy\\source\\repos\\Template\\Web\\Web.csproj",
+      "projectUniqueName": "C:\\Users\\Joy\\source\\repos\\github-action-mvc\\Web\\Web.csproj",
       "projectName": "Web",
-      "projectPath": "C:\\Users\\Joy\\source\\repos\\Template\\Web\\Web.csproj",
+      "projectPath": "C:\\Users\\Joy\\source\\repos\\github-action-mvc\\Web\\Web.csproj",
       "packagesPath": "C:\\Users\\Joy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Joy\\source\\repos\\Template\\Web\\obj\\",
+      "outputPath": "C:\\Users\\Joy\\source\\repos\\github-action-mvc\\Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

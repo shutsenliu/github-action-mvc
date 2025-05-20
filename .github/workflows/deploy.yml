@@ -1,29 +1,52 @@
-name: Build and Test .NET Core MVC
+name: Build and Deploy .NET Core App
 
 on:
   push:
     branches:
-      - main
-      - develop
+      - main      # 正式環境部署
+      - develop   # 測試環境部署
+
+env:
+  DOTNET_VERSION: '8.0.x'      # 我們用的 .NET 版本
+  GLOBAL_TIMEOUT: 300          # 全域變數：全部步驟可用
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
+    # 根據分支決定部署到哪個環境
+    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: 1️⃣ 取得原始碼
+      uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
+    - name: 2️⃣ 安裝 .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore dependencies
-        run: dotnet restore
+    - name: 3️⃣ 還原相依套件
+      run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+    - name: 4️⃣ 建置專案
+      run: dotnet build --configuration Release
 
-      - name: Run Tests
-        run: dotnet test --no-build --verbosity normal
+    - name: 5️⃣ 執行單元測試
+      run: dotnet test
+
+    - name: 6️⃣ 發佈網站（輸出到 publish 資料夾）
+      run: dotnet publish -c Release -o ./publish
+
+    - name: 7️⃣ 部署網站
+      env:
+        DEPLOY_API_KEY: ${{ secrets.DEPLOY_API_KEY }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_HOST: ${{ vars.DB_HOST }}
+        API_BASE_URL: ${{ vars.API_BASE_URL }}
+      run: |
+        echo "🔐 使用金鑰 $DEPLOY_API_KEY"
+        echo "🌍 部署到 API $API_BASE_URL"
+        echo "🛢 連線資料庫：$DB_HOST"
+        echo "📦 發佈資料夾：./publish"
+        # 這裡可以放你的部署命令，例如 Azure CLI、FTP 等
